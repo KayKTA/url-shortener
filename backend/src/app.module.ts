@@ -1,6 +1,7 @@
 import { Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { ConfigModule } from '@nestjs/config';
+import { UrlModule } from './url/url.module';
 
 @Module({
     imports: [
@@ -21,6 +22,8 @@ import { ConfigModule } from '@nestjs/config';
             synchronize: true, // Note: Auto-create tables -> Set to false in production
             logging: true, // Enable query logging for debugging
         }),
+
+        UrlModule,
     ],
     controllers: [],
     providers: [],
