@@ -23,6 +23,7 @@ docker-compose up -d
 ```bash
 cd backend
 cp .env.example .env
+cp .env.test.example .env.test
 npm install
 npm run start:dev
 ```

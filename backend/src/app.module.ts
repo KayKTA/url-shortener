@@ -2,6 +2,8 @@ import { Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { ConfigModule } from '@nestjs/config';
 import { UrlModule } from './url/url.module';
+import { AppController } from './app.controller';
+import { AppService } from './app.service';
 
 @Module({
     imports: [
@@ -20,12 +22,12 @@ import { UrlModule } from './url/url.module';
             database: process.env.DATABASE_NAME || 'urlshortener',
             entities: [__dirname + '/**/*.entity{.ts,.js}'],
             synchronize: true, // Note: Auto-create tables -> Set to false in production
-            logging: true, // Enable query logging for debugging
+            // logging: true, // Enable query logging for debugging
         }),
 
         UrlModule,
     ],
-    controllers: [],
-    providers: [],
+    controllers: [AppController],
+    providers: [AppService],
 })
 export class AppModule { }
