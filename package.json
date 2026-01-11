@@ -2,22 +2,16 @@
     "name": "url-shortener",
     "private": true,
     "scripts": {
-        "env:backend": "cpy backend/.env.example backend/.env --no-overwrite",
-        "env:backend:test": "cpy backend/.env.test.example backend/.env.test --no-overwrite",
-        "env:frontend": "cpy frontend/.env.example frontend/.env --no-overwrite",
-        "env:setup": "npm run env:backend && npm run env:backend:test && npm run env:frontend",
-
         "docker:up": "docker compose up -d",
         "docker:down": "docker compose down",
 
-        "setup": "npm run env:setup && npm run docker:up && npm run install:all",
         "install:all": "npm --prefix backend install && npm --prefix frontend install",
+        "setup": "npm run install:all && npm run docker:up",
 
         "dev": "concurrently -k -n backend,frontend -c blue,green \"npm --prefix backend run start:dev\" \"npm --prefix frontend run dev\"",
         "test:e2e": "npm --prefix backend run test:e2e"
     },
     "devDependencies": {
-        "concurrently": "^9.0.0",
-        "cpy-cli": "^6.0.0"
+        "concurrently": "^9.0.0"
     }
 }

@@ -32,7 +32,6 @@ A modern, full-stack URL shortener application built with React and NestJS. Tran
 - **Docker & Docker Compose** - Containerized database setup
 - **Jest** - Testing framework
 - **Concurrently** - Run multiple dev servers in parallel
-- **cpy-cli** - Automated environment file setup
 
 ## Prerequisites
 
@@ -50,10 +49,14 @@ Before you begin, ensure you have the following installed:
 git clone https://github.com/KayKTA/url-shortener.git
 cd url-shortener
 
-# 2. Setup everything (environment files, Docker, dependencies)
+# 2. Copy environment files
+cp backend/.env.example backend/.env
+cp backend/.env.test.example backend/.env.test
+
+# 3. Setup everything (Docker, dependencies)
 npm run setup
 
-# 3. Start development servers (backend + frontend)
+# 4. Start development servers (backend + frontend)
 npm run dev
 ```
 
@@ -61,7 +64,7 @@ That's it! The application will be running at:
 - **Frontend**: http://localhost:5173
 - **Backend**: http://localhost:3000
 
-> **Note**: The `setup` script automatically creates `.env` files from `.env.example` templates, starts Docker services, and installs all dependencies.
+> **Note**: The `setup` script starts Docker services and installs all dependencies. You need to manually copy the `.env.example` files to `.env` files before running setup.
 
 
 ## Project Structure
@@ -184,8 +187,9 @@ docker-compose down -v
 
 ### First Time Setup
 1. **Clone the repository**: `git clone https://github.com/KayKTA/url-shortener.git && cd url-shortener`
-2. **Complete setup**: `npm run setup` (creates .env files, starts Docker, installs dependencies)
-3. **Start development**: `npm run dev`
+2. **Copy environment files**: `cp backend/.env.example backend/.env && cp backend/.env.test.example backend/.env.test`
+3. **Complete setup**: `npm run setup` (starts Docker, installs dependencies)
+4. **Start development**: `npm run dev`
 
 ### Daily Development
 1. **Start services**: `npm run dev` (starts both backend and frontend)
@@ -194,7 +198,7 @@ docker-compose down -v
 4. **Stop services**: `Ctrl+C` to stop dev servers, `npm run docker:down` to stop Docker
 
 ### Useful Commands
-- **Reset environment files**: Delete `.env` files and run `npm run env:setup`
+- **Reset environment files**: Delete `.env` files and copy them again from `.env.example` templates
 - **Restart Docker only**: `npm run docker:down && npm run docker:up`
 - **Reinstall dependencies**: `npm run install:all`
 
