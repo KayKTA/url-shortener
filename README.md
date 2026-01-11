@@ -10,7 +10,7 @@ A modern, full-stack URL shortener application built with React and NestJS. Tran
 - **Clean UI**: Modern, responsive interface built with Material-UI
 - **Type-Safe**: Full TypeScript implementation across frontend and backend
 - **Database Persistence**: PostgreSQL database for reliable URL storage
-- **Testing**: Comprehensive E2E tests with separate test environment
+- **Testing**: Core E2E tests with separate test environment
 
 ## Tech Stack
 
@@ -63,84 +63,14 @@ That's it! The application will be running at:
 
 > **Note**: The `setup` script automatically creates `.env` files from `.env.example` templates, starts Docker services, and installs all dependencies.
 
-### Manual Setup (Alternative)
-
-If you prefer to run each step manually:
-
-#### 1. Clone the Repository
-
-```bash
-git clone https://github.com/KayKTA/url-shortener.git
-cd url-shortener
-```
-
-#### 2. Start PostgreSQL Databases
-
-```bash
-docker-compose up -d
-```
-
-This will start:
-- PostgreSQL (port 5432) - Development database
-- PostgreSQL Test (port 5433) - Testing database
-
-#### 3. Setup Backend
-
-```bash
-cd backend
-cp .env.example .env
-cp .env.test.example .env.test
-npm install
-npm run start:dev
-```
-
-#### 4. Setup Frontend
-
-Open a new terminal:
-
-```bash
-cd frontend
-npm install
-npm run dev
-```
-
-#### 5. Access the Application
-
-Open your browser and navigate to http://localhost:5173
 
 ## Project Structure
-
 ```
 url-shortener/
-├── backend/                  # NestJS backend application
-│   ├── src/
-│   │   ├── url/             # URL module
-│   │   │   ├── dto/         # Data Transfer Objects
-│   │   │   ├── entities/    # TypeORM entities
-│   │   │   ├── url.controller.ts
-│   │   │   ├── url.service.ts
-│   │   │   └── url.module.ts
-│   │   ├── app.module.ts    # Root module
-│   │   └── main.ts          # Application entry point
-│   ├── test/                # E2E tests
-│   ├── .env.example         # Environment variables template
-│   └── package.json
-├── frontend/                # React frontend application
-│   ├── src/
-│   │   ├── components/      # React components
-│   │   │   ├── UrlShortenerForm.tsx
-│   │   │   ├── UrlShortenerResult.tsx
-│   │   │   └── UrlHistory.tsx
-│   │   ├── hooks/           # Custom React hooks
-│   │   │   ├── useUrlShortener.ts
-│   │   │   └── useUrlHistory.ts
-│   │   ├── services/        # API services
-│   │   ├── types/           # TypeScript types
-│   │   ├── App.tsx          # Main app component
-│   │   └── main.tsx         # Application entry point
-│   └── package.json
-├── docker-compose.yml       # Docker services configuration
-├── package.json             # Root package with setup scripts
+├── backend/          # NestJS backend
+├── frontend/         # React frontend
+├── docker-compose.yml
+├── package.json      # Root scripts (setup, dev, test)
 └── README.md
 ```
 
@@ -172,68 +102,6 @@ Redirect to the original URL
 **Example:**
 ```
 http://localhost:3000/abc123 → https://example.com/very-long-url
-```
-
-## Available Scripts
-
-### Root Directory
-
-```bash
-# Setup & Installation
-npm run setup              # Full setup: create .env files, start Docker, install dependencies
-npm run install:all        # Install backend and frontend dependencies only
-
-# Environment Files
-npm run env:setup          # Copy all .env.example files to .env (won't overwrite existing)
-npm run env:backend        # Copy backend/.env.example to backend/.env
-npm run env:backend:test   # Copy backend/.env.test.example to backend/.env.test
-npm run env:frontend       # Copy frontend/.env.example to frontend/.env
-
-# Development
-npm run dev                # Start both backend and frontend in parallel
-
-# Docker
-npm run docker:up          # Start Docker services
-npm run docker:down        # Stop Docker services
-
-# Testing
-npm run test:e2e           # Run E2E tests
-```
-
-### Backend (`cd backend`)
-
-```bash
-# Development
-npm run start:dev          # Start with hot reload
-npm run start:debug        # Start in debug mode
-
-# Production
-npm run build              # Build the application
-npm run start:prod         # Start production server
-
-# Testing
-npm test                   # Run unit tests
-npm run test:watch         # Run tests in watch mode
-npm run test:e2e           # Run E2E tests
-npm run test:cov           # Run tests with coverage
-
-# Code Quality
-npm run lint               # Lint and fix code
-npm run format             # Format code with Prettier
-```
-
-### Frontend (`cd frontend`)
-
-```bash
-# Development
-npm run dev                # Start development server
-
-# Production
-npm run build              # Build for production
-npm run preview            # Preview production build
-
-# Code Quality
-npm run lint               # Lint code
 ```
 
 ## Environment Variables
@@ -363,13 +231,13 @@ docker-compose down -v
 - URL format verification
 - Error handling and user feedback
 
-## Browser Support
+## Next Steps (Production Readiness)
 
-The application supports all modern browsers:
-- Chrome (latest)
-- Firefox (latest)
-- Safari (latest)
-- Edge (latest)
+If this project were to be pushed toward production, the next steps would focus on robustness, security, and scalability:
+
+* Rate limiting and abuse prevention on the shortening endpoint
+* Improved observability (structured logs, metrics, monitoring)
+* Security hardening (allowed schemes, malicious URL detection)
 
 ## Author
 
