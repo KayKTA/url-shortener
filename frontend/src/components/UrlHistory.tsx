@@ -1,5 +1,4 @@
 import {
-    Paper,
     Typography,
     Table,
     TableBody,
@@ -10,6 +9,7 @@ import {
     IconButton,
     Chip,
     Box,
+    alpha,
 } from '@mui/material';
 import {
     Delete as DeleteIcon,
@@ -39,29 +39,93 @@ export const UrlHistory = ({ history, removeUrl }: UrlHistoryProps) => {
 
     if (history.length === 0) {
         return (
-            <Paper sx={{ p: 4, mx: 'auto', textAlign: 'center' }}>
-                <Typography variant="h6" color="text.secondary">
-                    No URL history available.
+            <Box
+                sx={{
+                    p: 8,
+                    textAlign: 'center',
+                    border: '1px solid',
+                    borderColor: 'divider',
+                    flex: 1,
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    flexDirection: 'column',
+                }}
+            >
+                <Typography variant="h6" color="text.secondary" fontWeight={500}>
+                    No URLs yet
                 </Typography>
-            </Paper>
+                <Typography variant="body2" color="text.secondary" sx={{ mt: 1 }}>
+                    Start by shortening your first URL
+                </Typography>
+            </Box>
         );
     }
+
     return (
-        <Paper sx={{ mt: 3 }}>
-            <Box sx={{ p: 3, pb: 2 }}>
-                <Typography variant="h6">
-                    Your Recent URLs ({history.length})
+        <Box
+            sx={{
+                bgcolor: 'background.paper',
+                border: '1px solid',
+                borderColor: 'divider',
+                overflow: 'hidden',
+                flex: 1,
+                display: 'flex',
+                flexDirection: 'column',
+            }}
+        >
+            {/* Header */}
+            <Box sx={{ p: 3, borderBottom: '1px solid', borderColor: 'divider' }}>
+                <Typography variant="h6" fontWeight={600}>
+                    Recent URLs
+                </Typography>
+                <Typography variant="body2" color="text.secondary">
+                    {history.length} {history.length === 1 ? 'link' : 'links'}
                 </Typography>
             </Box>
 
-            <TableContainer>
+            {/* Table */}
+            <TableContainer sx={{ flex: 1, px: 4 }}>
                 <Table>
                     <TableHead>
                         <TableRow>
-                            <TableCell>Short URL</TableCell>
-                            <TableCell>Original URL</TableCell>
-                            <TableCell>Created</TableCell>
-                            <TableCell align="right">Actions</TableCell>
+                            <TableCell
+                                sx={{
+                                    fontWeight: 600,
+                                    color: 'text.secondary',
+                                    bgcolor: (theme) => alpha(theme.palette.text.primary, 0.02),
+                                }}
+                            >
+                                Code
+                            </TableCell>
+                            <TableCell
+                                sx={{
+                                    fontWeight: 600,
+                                    color: 'text.secondary',
+                                    bgcolor: (theme) => alpha(theme.palette.text.primary, 0.02),
+                                }}
+                            >
+                                Original URL
+                            </TableCell>
+                            <TableCell
+                                sx={{
+                                    fontWeight: 600,
+                                    color: 'text.secondary',
+                                    bgcolor: (theme) => alpha(theme.palette.text.primary, 0.02),
+                                }}
+                            >
+                                Created
+                            </TableCell>
+                            <TableCell
+                                align="right"
+                                sx={{
+                                    fontWeight: 600,
+                                    color: 'text.secondary',
+                                    bgcolor: (theme) => alpha(theme.palette.text.primary, 0.02),
+                                }}
+                            >
+                                Actions
+                            </TableCell>
                         </TableRow>
                     </TableHead>
                     <TableBody>
@@ -87,17 +151,18 @@ export const UrlHistory = ({ history, removeUrl }: UrlHistoryProps) => {
                                     </Typography>
                                 </TableCell>
                                 <TableCell>
-                                    <Typography variant="caption" color="text.secondary">
+                                    <Typography variant="body2" color="text.secondary">
                                         {new Date(url.createdAt).toLocaleDateString()}
                                     </Typography>
                                 </TableCell>
                                 <TableCell align="right">
-                                    <Box sx={{ display: 'flex', gap: 0.5, justifyContent: 'flex-end' }}>
+                                    <Box
+                                        sx={{ display: 'flex', gap: 0.5, justifyContent: 'flex-end' }}
+                                    >
                                         <IconButton
                                             size="small"
                                             onClick={() => handleCopy(url.shortUrl, url.code)}
                                             color={copiedCode === url.code ? 'success' : 'default'}
-                                            title="Copy short URL"
                                         >
                                             <CopyIcon fontSize="small" />
                                         </IconButton>
@@ -106,7 +171,6 @@ export const UrlHistory = ({ history, removeUrl }: UrlHistoryProps) => {
                                             href={url.shortUrl}
                                             target="_blank"
                                             rel="noopener noreferrer"
-                                            title="Open short URL"
                                         >
                                             <OpenIcon fontSize="small" />
                                         </IconButton>
@@ -114,7 +178,6 @@ export const UrlHistory = ({ history, removeUrl }: UrlHistoryProps) => {
                                             size="small"
                                             color="error"
                                             onClick={() => removeUrl(url.code)}
-                                            title="Remove from history"
                                         >
                                             <DeleteIcon fontSize="small" />
                                         </IconButton>
@@ -125,6 +188,6 @@ export const UrlHistory = ({ history, removeUrl }: UrlHistoryProps) => {
                     </TableBody>
                 </Table>
             </TableContainer>
-        </Paper>
+        </Box>
     );
 };
