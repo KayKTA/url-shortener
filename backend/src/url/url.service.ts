@@ -19,8 +19,7 @@ export class UrlService {
             // Generate a random 6-character alphanumeric code
             const code = crypto
                 .randomBytes(4)
-                .toString('base64')
-                .replace(/[^a-z0-9]/g, '') // Remove non-alphanumeric characters + / = -> UPDATED to lowercase only
+                .toString('hex') // change to 'hex' to get alphanumeric characters
                 .substring(0, 6);
 
             // Check if the code already exists in the database
