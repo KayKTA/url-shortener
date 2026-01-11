@@ -20,14 +20,26 @@ export const UrlShortenerForm = ({
     error,
 }: UrlShortenerFormProps) => {
     const [url, setUrl] = useState('');
+    const [validationError, setValidationError] = useState('');
 
     const handleSubmit = (e: React.FormEvent) => {
         e.preventDefault();
+
+        if(!url.trim()) {
+            setValidationError('Please enter a URL.');
+            return;
+        }
+
+        if(!url.startsWith('http://') && !url.startsWith('https://')) {
+            setValidationError('URL must start with http:// or https://');
+            return;
+        }
+        setValidationError('');
         onSubmit(url);
     };
 
     return (
-        <Paper elevation={3} sx={{ p: 4, maxWidth: 600, mx: 'auto' }}>
+        <Paper elevation={3} sx={{ p: 4, mx: 'auto' }}>
             <Box component="form" onSubmit={handleSubmit} noValidate>
                 <TextField
                     fullWidth
@@ -35,8 +47,8 @@ export const UrlShortenerForm = ({
                     placeholder="https://example.com/very-very-long-url"
                     value={url}
                     onChange={(e) => setUrl(e.target.value)}
-                    error={!!error}
-                    helperText={error}
+                    error={!!validationError || !!error}
+                    helperText={validationError || error}
                     disabled={loading}
                     sx={{ mb: 3 }}
                 />
