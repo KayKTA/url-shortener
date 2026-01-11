@@ -4,8 +4,11 @@ import {
     Typography,
     TextField,
     Alert,
+    Button,
 } from '@mui/material';
 import type { UrlResponse } from '../types/shortener';
+import { useState } from 'react';
+import { Check, ContentCopy } from '@mui/icons-material';
 
 interface UrlShortenerResultProps {
     result: UrlResponse;
@@ -14,6 +17,18 @@ interface UrlShortenerResultProps {
 export const UrlShortenerResult = ({
     result,
 }: UrlShortenerResultProps) => {
+    const [copied, setCopied] = useState(false);
+
+    const handleCopy = async () => {
+        try {
+            await navigator.clipboard.writeText(result.shortUrl);
+            setCopied(true);
+            setTimeout(() => setCopied(false), 2000);
+
+        } catch (err) {
+            console.error('Failed to copy: ', err);
+        }
+    };
 
     return (
         <Paper
@@ -40,6 +55,14 @@ export const UrlShortenerResult = ({
                         value={result.shortUrl}
                         size="small"
                     />
+                    <Button
+                        variant="contained"
+                        onClick={handleCopy}
+                        title='Copy URL'
+                        disabled={copied}
+                    >
+                        {copied ? <Check /> : <ContentCopy />}
+                    </Button>
                 </Box>
             </Box>
 
