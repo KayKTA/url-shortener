@@ -1,6 +1,6 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Repository } from 'typeorm';
+import { Not, Repository } from 'typeorm';
 import { Url } from './entities/url.entity';
 import * as crypto from 'crypto';
 import { CreateUrlDto } from './dto/create-url.dto';
@@ -38,6 +38,16 @@ export class UrlService {
     }
 
     async createShortUrl(dto: CreateUrlDto): Promise<Url> {
+        // Check if the original URL already exists
+        const existingUrl = await this.urlRepository.findOne({
+            where: { originalUrl: dto.url },
+        });
+
+        if (existingUrl) {
+            return existingUrl;
+        }
+
+        // Generate a unique code for the new URL
         const code = await this.generateUniqueCode();
 
         const newUrl = this.urlRepository.create({
@@ -48,4 +58,14 @@ export class UrlService {
         return this.urlRepository.save(newUrl);
     }
 
+    async redirect(code: string): Promise<string> {
+        // Find the URL by its code
+        const url = await this.urlRepository.findOne({ where: { code } });
+
+        if (!url) {
+            throw new NotFoundException('URL not found');
+        }
+
+        return url.originalUrl;
+    }
 }

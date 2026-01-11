@@ -19,4 +19,13 @@ export class UrlController {
             createdAt: url.createdAt,
         });
     }
+
+    // Redirect to Original URL
+    @Get(':code')
+    @Redirect()
+    async redirectToOriginalUrl(@Param('code') code: string) {
+        const url = await this.urlService.redirect(code);
+        return { url, statusCode: 302 };
+    }
+
 }
