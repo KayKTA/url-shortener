@@ -18,14 +18,13 @@ import {
 } from '@mui/icons-material';
 import { useState } from 'react';
 import type { UrlResponse } from '../types/shortener';
-import { useUrlHistory } from '../hooks/useUrlHistory';
 
 interface UrlHistoryProps {
     history: UrlResponse[];
+    removeUrl: (code: string) => void;
 }
 
-export const UrlHistory = ({ history }: UrlHistoryProps) => {
-    const { removeUrlFromHistory } = useUrlHistory();
+export const UrlHistory = ({ history, removeUrl }: UrlHistoryProps) => {
     const [copiedCode, setCopiedCode] = useState<string | null>(null);
 
     const handleCopy = async (shortUrl: string, code: string) => {
@@ -114,7 +113,7 @@ export const UrlHistory = ({ history }: UrlHistoryProps) => {
                                         <IconButton
                                             size="small"
                                             color="error"
-                                            onClick={() => removeUrlFromHistory(url.code)}
+                                            onClick={() => removeUrl(url.code)}
                                             title="Remove from history"
                                         >
                                             <DeleteIcon fontSize="small" />

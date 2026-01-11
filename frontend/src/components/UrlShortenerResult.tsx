@@ -1,6 +1,5 @@
 import {
     Box,
-    Paper,
     Typography,
     TextField,
     Alert,
@@ -31,8 +30,7 @@ export const UrlShortenerResult = ({
     };
 
     return (
-        <Paper
-            elevation={3}
+        <Box
             sx={{
                 p: 4,
                 maxWidth: 600,
@@ -66,14 +64,14 @@ export const UrlShortenerResult = ({
                 </Box>
             </Box>
 
-            <Box sx={{ mb: 2 }}>
+            {/* <Box sx={{ mb: 2 }}>
                 <Typography variant="subtitle2" color="text.secondary" gutterBottom>
                     Original URL
                 </Typography>
                 <Typography variant="body2" >
                     {result.originalUrl}
                 </Typography>
-            </Box>
-        </Paper>
+            </Box> */}
+        </Box>
     );
 };

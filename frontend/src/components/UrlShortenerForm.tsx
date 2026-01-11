@@ -7,17 +7,21 @@ import {
     CircularProgress,
 } from '@mui/material';
 import { Link as LinkIcon } from '@mui/icons-material';
+import type { UrlResponse } from '../types/shortener';
+import { UrlShortenerResult } from './UrlShortenerResult';
 
 interface UrlShortenerFormProps {
     onSubmit: (url: string) => void;
     loading: boolean;
     error: string | null;
+    result: UrlResponse | null;
 }
 
 export const UrlShortenerForm = ({
     onSubmit,
     loading,
     error,
+    result,
 }: UrlShortenerFormProps) => {
     const [url, setUrl] = useState('');
     const [validationError, setValidationError] = useState('');
@@ -64,6 +68,9 @@ export const UrlShortenerForm = ({
                     {loading ? 'Shortening in progress' : 'Shorten URL'}
                 </Button>
             </Box>
+            {result && (
+                <UrlShortenerResult result={result} />
+            )}
         </Paper>
     );
 };
