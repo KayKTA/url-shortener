@@ -20,7 +20,7 @@ export class UrlService {
             const code = crypto
                 .randomBytes(4)
                 .toString('base64')
-                .replace(/[^a-zA-Z0-9]/g, '') // Remove non-alphanumeric characters + / =
+                .replace(/[^a-z0-9]/g, '') // Remove non-alphanumeric characters + / = -> UPDATED to lowercase only
                 .substring(0, 6);
 
             // Check if the code already exists in the database
@@ -59,8 +59,14 @@ export class UrlService {
     }
 
     async redirect(code: string): Promise<string> {
+
+        // Normalize the code to ensure case-insensitivity
+        const normalizedCode = code.trim().toLowerCase();
+
         // Find the URL by its code
-        const url = await this.urlRepository.findOne({ where: { code } });
+        const url = await this.urlRepository.findOne({
+            where: { code: normalizedCode }
+        });
 
         if (!url) {
             throw new NotFoundException('URL not found');
