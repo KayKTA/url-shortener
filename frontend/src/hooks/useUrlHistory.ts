@@ -2,36 +2,61 @@ import { useState, useEffect } from 'react';
 import type { UrlResponse } from '../types/shortener';
 
 const HISTORY_KEY = 'url_shortener_history';
+const HISTORY_EVENT = 'url_history_updated';
+const MAX_ITEMS = 20;
+
+// Safely parses the history from localStorage, returning an empty array on failure
+function safeParseHistory(value: string | null): UrlResponse[] {
+    if (!value) return [];
+    try {
+        const parsed = JSON.parse(value);
+        return Array.isArray(parsed) ? (parsed as UrlResponse[]) : [];
+    } catch {
+        return [];
+    }
+}
 
 export function useUrlHistory() {
-    const [history, setHistory] = useState<UrlResponse[]>([]);
+    const [history, setHistory] = useState<UrlResponse[]>(() => {
+        return safeParseHistory(localStorage.getItem(HISTORY_KEY)).slice(0, MAX_ITEMS);
+    });
 
-    // Load history from localStorage on initial render
+    const persist = (items: UrlResponse[]) => {
+        localStorage.setItem(HISTORY_KEY, JSON.stringify(items));
+    };
+
+    const reloadFromStorage = () => {
+        setHistory(safeParseHistory(localStorage.getItem(HISTORY_KEY)));
+    };
+
     useEffect(() => {
-        const saved = localStorage.getItem(HISTORY_KEY);
-        if (saved) {
-            setHistory(JSON.parse(saved));
-        }
+        const handleUpdate = () => reloadFromStorage();
+        window.addEventListener(HISTORY_EVENT, handleUpdate);
+        return () => window.removeEventListener(HISTORY_EVENT, handleUpdate);
     }, []);
 
-    // Adds a new URL to the history, ensuring no duplicates based on the code
     const addUrlToHistory = (url: UrlResponse) => {
-        const updatedHistory = [url, ...history.filter(u => u.code !== url.code)];
-        setHistory(updatedHistory);
-        localStorage.setItem(HISTORY_KEY, JSON.stringify(updatedHistory));
+        setHistory(prev => {
+            const updated = [url, ...prev.filter(u => u.code !== url.code)].slice(0, MAX_ITEMS);
+            persist(updated);
+            window.dispatchEvent(new Event(HISTORY_EVENT));
+            return updated;
+        });
     };
 
-    // Removes a URL from the history based on its code
     const removeUrlFromHistory = (code: string) => {
-        const updatedHistory = history.filter(url => url.code !== code);
-        setHistory(updatedHistory);
-        localStorage.setItem(HISTORY_KEY, JSON.stringify(updatedHistory));
+        setHistory(prev => {
+            const updated = prev.filter(u => u.code !== code);
+            persist(updated);
+            window.dispatchEvent(new Event(HISTORY_EVENT));
+            return updated;
+        });
     };
 
-    // Clears the entire URL history
     const clearHistory = () => {
         setHistory([]);
         localStorage.removeItem(HISTORY_KEY);
+        window.dispatchEvent(new Event(HISTORY_EVENT));
     };
 
     return {
